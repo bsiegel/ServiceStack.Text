@@ -84,6 +84,32 @@ namespace ServiceStack.Text.Tests.CsvTests
 			Console.WriteLine(csv);
 
 			Assert.That(csv, Is.EqualTo(
+				"Column 1,Column2Data,\"Column,3\",Column4Data,Column 5\r\n"
+				+ "I,Like,To,Read,Novels\r\n"
+				+ "I am,Very,Cool,And,Awesome\r\n"
+			));
+		}
+
+		[Test]
+		public void Custom_header_can_omit_column()
+		{
+			CsvConfig<TableItem>.CustomHeadersMap = new Dictionary<string, string> {
+				{"Column1Data", "Column 1"},
+				{"Column2Data", null},
+				{"Column3Data", "Column,3"},
+				{"Column4Data", null},
+				{"Column5Data", "Column 5"},
+			};
+			var data = new List<TableItem> {
+				new TableItem { Column1Data = "I", Column2Data = "Like", Column3Data = "To", Column4Data = "Read", Column5Data = "Novels" },
+				new TableItem { Column1Data = "I am", Column2Data = "Very", Column3Data = "Cool", Column4Data = "And", Column5Data = "Awesome" },
+			};
+
+			var csv = CsvSerializer.SerializeToCsv(data);
+
+			Console.WriteLine(csv);
+
+			Assert.That(csv, Is.EqualTo(
 				"Column 1,\"Column,3\",Column 5\r\n"
 				+ "I,To,Novels\r\n"
 				+ "I am,Cool,Awesome\r\n"
@@ -108,6 +134,8 @@ namespace ServiceStack.Text.Tests.CsvTests
 			};
 
 			var csv = CsvSerializer.SerializeToCsv(data);
+
+			CsvConfig<TableItem>.OmitHeaders = false;
 
 			Console.WriteLine(csv);
 

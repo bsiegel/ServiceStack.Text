@@ -50,14 +50,17 @@ namespace ServiceStack.Text
 			{
 				var oldHeader = Headers[i];
 				string newHeaderValue;
-				if (!customHeadersMap.TryGetValue(oldHeader, out newHeaderValue))
+				if (customHeadersMap.TryGetValue(oldHeader, out newHeaderValue))
 				{
-					Headers.RemoveAt(i);
-					PropertyGetters.RemoveAt(i);
-				}
-				else
-				{
-					Headers[i] = newHeaderValue.EncodeJsv();
+					if (newHeaderValue == null)
+					{
+						Headers.RemoveAt(i);
+						PropertyGetters.RemoveAt(i);
+					}
+					else
+					{
+						Headers[i] = newHeaderValue.EncodeJsv();
+					}
 				}
 			}
 		}
